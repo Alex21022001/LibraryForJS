@@ -126,6 +126,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.index = function () {
 }
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.find = function (selector) {
+    let success = false;
     if (!selector) {
         throw new Error("You didn't pass a selector");
     }
@@ -142,6 +143,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.find = function (selecto
 
         for (let j = 0; j < arr.length; j++) {
             this[counter++] = arr[j];
+            success = true;
         }
 
         numberOfItems += arr.length;
@@ -150,6 +152,10 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.find = function (selecto
     this.length = numberOfItems;
     for (; numberOfItems < Object.keys(this).length; numberOfItems++) {
         delete this[numberOfItems];
+    }
+
+    if (success === false) {
+        console.log("Method find. There is no appropriate element for your selector");
     }
 
     return this;
@@ -167,7 +173,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.closest = function (sele
         }
     }
     if (success === false)
-        throw new Error("Method closest. There is no appropriate element for your selector");
+        console.log("Method closest. There is no appropriate element for your selector");
 
     this.length = counter;
     for (; counter < Object.keys(this).length; counter++)
@@ -542,44 +548,60 @@ __webpack_require__.r(__webpack_exports__);
 
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function () {
-    for (let i = 0; i < this.length; i++) {
-        const target = this[i].getAttribute("data-target");
+    for (let i = 0; i < this.length; i++) {//Проходимся по все елементам
+        const target = this[i].getAttribute("data-target"); // Получаем id модалки которую нужно открыть
 
-        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((e) => {
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((e) => { // Назначаем клик и показываем модалку
             e.preventDefault();
             (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).fadeIn();
-            document.body.style.marginRight = `${calculateScroll()}px`;
+            document.body.style.marginRight = `${calculateScroll()}px`; // Добавляем марджин что бы не двигалосся ползунок
             document.body.style.overflow = "hidden";
         });
-    }
 
-    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-close]").click((e) => {
-        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target.closest(".modal")).fadeOut();
-        document.body.style.overflow = "";
-        document.body.style.marginRight = `0px`;
-    });
-
-    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".modal").click(function (e) {
-        if (e.target.classList.contains("modal")) {
-            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).fadeOut();
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).find("[data-close]").click((e) => { // Ищем все дата атрибуты для закрытия и ставим ивент
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target.closest(".modal")).fadeOut();
             document.body.style.overflow = "";
-        }
-    });
+            document.body.style.marginRight = `0px`;
+        });
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).closest(".modal").click(function (e) { //Для клика на подложку закрываем
+            if (e.target.classList.contains("modal")) {
+                (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).fadeOut();
+                document.body.style.overflow = "";
+            }
+        });
+    }
 }
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function ({text,title,btns}) {
-    for (let i = 0; i <this.length; i++) {
+    for (let i = 0; i <this.length; i++) { //Проходимя по всем елементам которым нужно создать модалку
         let modal = document.createElement("div");
-        const id = this[i].getAttribute("data-target").replace("#","");
-        const buttons= [];
+        const id = this[i].getAttribute("data-target").replace("#", "");
+        const buttons = [];
 
-        for (let j = 0; j <btns.count; j++) {
-            let btn = document.createElement("button");
-            btn.classList.add("btn",...btns.settings[j][1])
-        }
+        if (!(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`#${id}`).length >= 1) { //Проверяем, если уже создана модалка под тем же id
+            // что бы не было дубликатов и не вызывалось сразу несколько
 
-        modal.innerHTML = `
-        <div class="modal" id="${id}">
+            //Добавляем класс к основному блоку
+            modal.classList.add("modal");
+            modal.setAttribute("id", id);
+
+            //btns= {count: num, settings : [[title,classes[],close,callback]]}
+
+            for (let j = 0; j < btns.count(); j++) { // Создаем кнопки из переданых настроек, и сохраняем в массив
+                let btn = document.createElement("button");
+                btn.classList.add("button", "modal-btn", ...btns.settings[j][1]);
+                btn.textContent = btns.settings[j][0];
+                if (btns.settings[j][2]) {
+                    btn.setAttribute("data-close", "true");
+                }
+                btn.addEventListener("click", btns.settings[j][3]);
+
+                buttons[j] = btn;
+            }
+
+            //Создаем саму модалку без кнопок
+            modal.innerHTML = ` 
             <div class="modal-dialog">
                 <div class="modal-content">
                     <button class="modal-close" data-close>
@@ -593,13 +615,20 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function (
                     <div class="modal-body">${text}</div>
                     
                     <div class="modal-footer">
-                        <button class="button modal-btn" data-close>Send</button>
+                        
                     </div>
                 </div>
-            </div>
-        </div>`;
+            </div>`;
 
-        document.body.append(modal);
+            modal.querySelector(".modal-footer").append(...buttons);
+
+            //Добавлем модалку в HTML
+            document.body.append(modal);
+
+            //Вызываем метод с тригерами, на кнопку которую мы изначально передали. Что бы все правильно работало
+            // на кнопке долженбыть атрбут с id модалки которую нужно показать при клике.
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).modal();
+        }
         (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).modal();
     }
 
@@ -693,9 +722,9 @@ __webpack_require__.r(__webpack_exports__);
 
 (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".btn").click(function () {
     (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeOut(800);
-    setTimeout(()=>{
-        (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeInUp(600,50);
-    },1500);
+    setTimeout(() => {
+        (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeInUp(600, 50);
+    }, 1500);
 });
 
 (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".btn2").click(function () {
@@ -703,20 +732,37 @@ __webpack_require__.r(__webpack_exports__);
 });
 
 (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").createDropDown({
-    id : "test",
-    name : "TEST",
-    buttonsClasses : ["button","test"],
-    actions : {
-        "Test" : "#",
-        "Test2" : "#",
-        "Test3" : "#"
+    id: "test",
+    name: "TEST",
+    buttonsClasses: ["button", "test"],
+    actions: {
+        "Test": "#",
+        "Test2": "#",
+        "Test3": "#"
     }
 });
 
-// $("[data-toggle='modal-generate']").createModal({
-//     text : "It's just a text",
-//     title : "Title for modal"
-// });
+const callback = function () {
+    console.log("Callback");
+}
+
+;(0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='modal-generate']").createModal({
+    text: "It's just a text",
+    title: "Title for modal",
+    //btns= {count: num, settings : [[title,classes[],close,callback]]}
+    btns: {
+        settings: [
+            ["Click Me", ["modal-btn-test", "modal-btn-test-2"], false, callback],
+            ["Second Button", ["modal-btn-test-3"], true]
+        ],
+
+        count() {
+            return this.settings.length
+        }
+    }
+});
+
+
 
 })();
 

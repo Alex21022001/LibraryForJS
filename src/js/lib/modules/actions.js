@@ -40,6 +40,7 @@ $.prototype.index = function () {
 }
 
 $.prototype.find = function (selector) {
+    let success = false;
     if (!selector) {
         throw new Error("You didn't pass a selector");
     }
@@ -56,6 +57,7 @@ $.prototype.find = function (selector) {
 
         for (let j = 0; j < arr.length; j++) {
             this[counter++] = arr[j];
+            success = true;
         }
 
         numberOfItems += arr.length;
@@ -64,6 +66,10 @@ $.prototype.find = function (selector) {
     this.length = numberOfItems;
     for (; numberOfItems < Object.keys(this).length; numberOfItems++) {
         delete this[numberOfItems];
+    }
+
+    if (success === false) {
+        console.log("Method find. There is no appropriate element for your selector");
     }
 
     return this;
@@ -81,7 +87,7 @@ $.prototype.closest = function (selector) {
         }
     }
     if (success === false)
-        throw new Error("Method closest. There is no appropriate element for your selector");
+        console.log("Method closest. There is no appropriate element for your selector");
 
     this.length = counter;
     for (; counter < Object.keys(this).length; counter++)

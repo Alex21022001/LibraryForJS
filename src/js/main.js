@@ -3,9 +3,9 @@ import $ from "./lib/lib";
 
 $(".btn").click(function () {
     $(".box").fadeOut(800);
-    setTimeout(()=>{
-        $(".box").fadeInUp(600,50);
-    },1500);
+    setTimeout(() => {
+        $(".box").fadeInUp(600, 50);
+    }, 1500);
 });
 
 $(".btn2").click(function () {
@@ -13,17 +13,34 @@ $(".btn2").click(function () {
 });
 
 $(".box").createDropDown({
-    id : "test",
-    name : "TEST",
-    buttonsClasses : ["button","test"],
-    actions : {
-        "Test" : "#",
-        "Test2" : "#",
-        "Test3" : "#"
+    id: "test",
+    name: "TEST",
+    buttonsClasses: ["button", "test"],
+    actions: {
+        "Test": "#",
+        "Test2": "#",
+        "Test3": "#"
     }
 });
 
-// $("[data-toggle='modal-generate']").createModal({
-//     text : "It's just a text",
-//     title : "Title for modal"
-// });
+const callback = function () {
+    console.log("Callback");
+}
+
+$("[data-toggle='modal-generate']").createModal({
+    text: "It's just a text",
+    title: "Title for modal",
+    //btns= {count: num, settings : [[title,classes[],close,callback]]}
+    btns: {
+        settings: [
+            ["Click Me", ["modal-btn-test", "modal-btn-test-2"], false, callback],
+            ["Second Button", ["modal-btn-test-3"], true]
+        ],
+
+        count() {
+            return this.settings.length
+        }
+    }
+});
+
+
