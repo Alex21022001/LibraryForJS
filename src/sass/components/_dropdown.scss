@@ -1,7 +1,7 @@
 .dropdown{
     position: relative;
     display: inline-block;
-    &-toggle{
+    button{
         &:after{
             content: "";
             display: inline-block;

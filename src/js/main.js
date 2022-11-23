@@ -11,3 +11,5 @@ $(".btn").click(function () {
 $(".btn2").click(function () {
     $(".box").fadeToggle();
 });
+
+
