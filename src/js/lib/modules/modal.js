@@ -26,7 +26,41 @@ $.prototype.modal = function () {
     });
 }
 
-$.prototype.createModal = function ({}) {
+$.prototype.createModal = function ({text,title,btns}) {
+    for (let i = 0; i <this.length; i++) {
+        let modal = document.createElement("div");
+        const id = this[i].getAttribute("data-target").replace("#","");
+        const buttons= [];
+
+        for (let j = 0; j <btns.count; j++) {
+            let btn = document.createElement("button");
+            btn.classList.add("btn",...btns.settings[j][1])
+        }
+
+        modal.innerHTML = `
+        <div class="modal" id="${id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="modal-close" data-close>
+                        <span>&times;</span>
+                    </button>
+    
+                    <div class="modal-header">
+                        <div class="modal-title">${title}</div>
+                    </div>
+    
+                    <div class="modal-body">${text}</div>
+                    
+                    <div class="modal-footer">
+                        <button class="button modal-btn" data-close>Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+        document.body.append(modal);
+        $(this[i]).modal();
+    }
 
 }
 

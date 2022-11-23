@@ -17,19 +17,27 @@ $.prototype.dropDown = function () {
 $.prototype.createDropDown = function ({
                                            id = null,
                                            name = null,
-                                           buttonsClass = null,
+                                           buttonsClasses,
                                            actions = null
                                        }) {
 
-    const dropDown = document.createElement("div");
+    const dropDown = document.createElement("div"),
+        btn = document.createElement("button");
 
-    dropDown.innerHTML = `<div class="dropdown">
-        <button class="${buttonsClass}" data-toggle="dropdown" id="${id}">${name}</button>
+    dropDown.classList.add("dropdown");
+
+    btn.classList.add(...buttonsClasses);
+    btn.setAttribute("data-toggle","dropdown");
+    btn.setAttribute("id",id)
+    btn.textContent = name;
+
+    dropDown.innerHTML = `
         <ul class="dropdown-menu" data-target="${id}"></ul>
-    </div>`;
+    `;
 
     for (let i = 0; i < this.length; i++) {
-        this[i].append(dropDown);
+        this[i].insertAdjacentElement("afterend",dropDown);
+        dropDown.insertAdjacentElement("afterbegin",btn);
     }
 
     for (const actionsKey in actions) {

@@ -15,10 +15,15 @@ $(".btn2").click(function () {
 $(".box").createDropDown({
     id : "test",
     name : "TEST",
-    buttonsClass : "button",
+    buttonsClasses : ["button","test"],
     actions : {
         "Test" : "#",
         "Test2" : "#",
         "Test3" : "#"
     }
-})
+});
+
+// $("[data-toggle='modal-generate']").createModal({
+//     text : "It's just a text",
+//     title : "Title for modal"
+// });

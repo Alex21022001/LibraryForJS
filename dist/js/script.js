@@ -334,19 +334,27 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropDown = function () {
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = function ({
                                            id = null,
                                            name = null,
-                                           buttonsClass = null,
+                                           buttonsClasses,
                                            actions = null
                                        }) {
 
-    const dropDown = document.createElement("div");
+    const dropDown = document.createElement("div"),
+        btn = document.createElement("button");
 
-    dropDown.innerHTML = `<div class="dropdown">
-        <button class="${buttonsClass}" data-toggle="dropdown" id="${id}">${name}</button>
+    dropDown.classList.add("dropdown");
+
+    btn.classList.add(...buttonsClasses);
+    btn.setAttribute("data-toggle","dropdown");
+    btn.setAttribute("id",id)
+    btn.textContent = name;
+
+    dropDown.innerHTML = `
         <ul class="dropdown-menu" data-target="${id}"></ul>
-    </div>`;
+    `;
 
     for (let i = 0; i < this.length; i++) {
-        this[i].append(dropDown);
+        this[i].insertAdjacentElement("afterend",dropDown);
+        dropDown.insertAdjacentElement("afterbegin",btn);
     }
 
     for (const actionsKey in actions) {
@@ -559,7 +567,41 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function () {
     });
 }
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function ({}) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function ({text,title,btns}) {
+    for (let i = 0; i <this.length; i++) {
+        let modal = document.createElement("div");
+        const id = this[i].getAttribute("data-target").replace("#","");
+        const buttons= [];
+
+        for (let j = 0; j <btns.count; j++) {
+            let btn = document.createElement("button");
+            btn.classList.add("btn",...btns.settings[j][1])
+        }
+
+        modal.innerHTML = `
+        <div class="modal" id="${id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="modal-close" data-close>
+                        <span>&times;</span>
+                    </button>
+    
+                    <div class="modal-header">
+                        <div class="modal-title">${title}</div>
+                    </div>
+    
+                    <div class="modal-body">${text}</div>
+                    
+                    <div class="modal-footer">
+                        <button class="button modal-btn" data-close>Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+
+        document.body.append(modal);
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).modal();
+    }
 
 }
 
@@ -663,13 +705,18 @@ __webpack_require__.r(__webpack_exports__);
 (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").createDropDown({
     id : "test",
     name : "TEST",
-    buttonsClass : "button",
+    buttonsClasses : ["button","test"],
     actions : {
         "Test" : "#",
         "Test2" : "#",
         "Test3" : "#"
     }
-})
+});
+
+// $("[data-toggle='modal-generate']").createModal({
+//     text : "It's just a text",
+//     title : "Title for modal"
+// });
 
 })();
 
