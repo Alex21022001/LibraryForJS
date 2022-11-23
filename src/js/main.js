@@ -12,4 +12,13 @@ $(".btn2").click(function () {
     $(".box").fadeToggle();
 });
 
-
+$(".box").createDropDown({
+    id : "test",
+    name : "TEST",
+    buttonsClass : "button",
+    actions : {
+        "Test" : "#",
+        "Test2" : "#",
+        "Test3" : "#"
+    }
+})

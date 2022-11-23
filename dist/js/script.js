@@ -86,18 +86,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toArray = function (){
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toArray = function () {
     const arr = [];
-    for (let i = 0; i <this.length; i++) {
-        arr[i]=this[i];
+    for (let i = 0; i < this.length; i++) {
+        arr[i] = this[i];
     }
     return arr;
 }
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.html = function (content) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.html = function (content, safe = false) {
     for (let i = 0; i < this.length; i++) {
-        if (content)
+        if (content && safe === false)
             this[i].innerHTML = content;
+        else if (content && safe === true)
+            this[i].innerHTML += content;
         else
             return this[i].innerHTML;
     }
@@ -172,10 +174,10 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.closest = function (sele
         delete this[counter];
 
     let countLength = 0;
-    for (let i = 0; i <this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
         if (this[i] === null) {
             delete this[i];
-        }else
+        } else
             countLength++;
     }
     this.length = countLength;
@@ -198,7 +200,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.siblings = function () {
             this[counter++] = arr[j];
         }
 
-        numberOfItems += arr.length -1;
+        numberOfItems += arr.length - 1;
     }
 
     this.length = numberOfItems;
@@ -315,18 +317,48 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropDown = function (){
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropDown = function () {
     for (let i = 0; i < this.length; i++) {
         const id = this[i].getAttribute("id");
-        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(()=>{
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(() => {
             (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`[data-target="${id}"]`).fadeToggle(300);
         });
     }
-    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".dropdown-item > a").click(function (){
-       setTimeout(()=>{
-           (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).closest(".dropdown-menu").fadeToggle();
-       },100);
+    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".dropdown-item > a").click(function () {
+        setTimeout(() => {
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).closest(".dropdown-menu").fadeToggle();
+        }, 100);
     });
+}
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = function ({
+                                           id = null,
+                                           name = null,
+                                           buttonsClass = null,
+                                           actions = null
+                                       }) {
+
+    const dropDown = document.createElement("div");
+
+    dropDown.innerHTML = `<div class="dropdown">
+        <button class="${buttonsClass}" data-toggle="dropdown" id="${id}">${name}</button>
+        <ul class="dropdown-menu" data-target="${id}"></ul>
+    </div>`;
+
+    for (let i = 0; i < this.length; i++) {
+        this[i].append(dropDown);
+    }
+
+    for (const actionsKey in actions) {
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(dropDown).find(".dropdown-menu").html(`
+        <li class="dropdown-item">
+                <a href="${actions[actionsKey]}">${actionsKey}</a>
+            </li>
+        `,true);
+    }
+
+    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='dropdown']").dropDown();
 }
 
 ;(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='dropdown']").dropDown();
@@ -502,13 +534,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function () {
-    console.log(this);
     for (let i = 0; i < this.length; i++) {
         const target = this[i].getAttribute("data-target");
 
         (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((e) => {
             e.preventDefault();
             (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).fadeIn();
+            document.body.style.marginRight = `${calculateScroll()}px`;
             document.body.style.overflow = "hidden";
         });
     }
@@ -516,7 +548,9 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function () {
     (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-close]").click((e) => {
         (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target.closest(".modal")).fadeOut();
         document.body.style.overflow = "";
+        document.body.style.marginRight = `0px`;
     });
+
     (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".modal").click(function (e) {
         if (e.target.classList.contains("modal")) {
             (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).fadeOut();
@@ -525,7 +559,26 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function () {
     });
 }
 
-;(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='modal']").modal();
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function ({}) {
+
+}
+
+function calculateScroll() {
+    const div = document.createElement("div");
+
+    div.style.width = "50px";
+    div.style.height = "50px";
+    div.style.overflowY = "scroll";
+    div.style.visibility = "hidden";
+
+    document.body.append(div);
+    const t = div.offsetWidth - div.clientWidth;
+    div.remove();
+
+    return t;
+}
+
+(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='modal']").modal();
 
 /***/ })
 
@@ -607,7 +660,16 @@ __webpack_require__.r(__webpack_exports__);
     (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeToggle();
 });
 
-
+(0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").createDropDown({
+    id : "test",
+    name : "TEST",
+    buttonsClass : "button",
+    actions : {
+        "Test" : "#",
+        "Test2" : "#",
+        "Test3" : "#"
+    }
+})
 
 })();
 

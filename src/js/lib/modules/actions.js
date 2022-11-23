@@ -1,17 +1,19 @@
 import $ from "../core";
 
-$.prototype.toArray = function (){
+$.prototype.toArray = function () {
     const arr = [];
-    for (let i = 0; i <this.length; i++) {
-        arr[i]=this[i];
+    for (let i = 0; i < this.length; i++) {
+        arr[i] = this[i];
     }
     return arr;
 }
 
-$.prototype.html = function (content) {
+$.prototype.html = function (content, safe = false) {
     for (let i = 0; i < this.length; i++) {
-        if (content)
+        if (content && safe === false)
             this[i].innerHTML = content;
+        else if (content && safe === true)
+            this[i].innerHTML += content;
         else
             return this[i].innerHTML;
     }
@@ -86,10 +88,10 @@ $.prototype.closest = function (selector) {
         delete this[counter];
 
     let countLength = 0;
-    for (let i = 0; i <this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
         if (this[i] === null) {
             delete this[i];
-        }else
+        } else
             countLength++;
     }
     this.length = countLength;
@@ -112,7 +114,7 @@ $.prototype.siblings = function () {
             this[counter++] = arr[j];
         }
 
-        numberOfItems += arr.length -1;
+        numberOfItems += arr.length - 1;
     }
 
     this.length = numberOfItems;
