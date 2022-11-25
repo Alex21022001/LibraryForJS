@@ -1,5 +1,7 @@
 import $ from "./lib/lib";
 
+//TEST MERGE
+
 
 $(".btn").click(function () {
     $(".box").fadeOut(800);
