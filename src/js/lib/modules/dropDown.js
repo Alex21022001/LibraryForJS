@@ -18,7 +18,7 @@ $.prototype.createDropDown = function ({
                                            id = null,
                                            name = null,
                                            buttonsClasses,
-                                           actions = null
+                                           actionLink = null
                                        }) {
 
     const dropDown = document.createElement("div"),
@@ -40,11 +40,11 @@ $.prototype.createDropDown = function ({
         dropDown.insertAdjacentElement("afterbegin",btn);
     }
 
-    for (const actionsKey in actions) {
+    for (const actionName in actionLink) {
 
         $(dropDown).find(".dropdown-menu").html(`
         <li class="dropdown-item">
-                <a href="${actions[actionsKey]}">${actionsKey}</a>
+                <a href="${actionLink[actionName]}">${actionName}</a>
             </li>
         `,true);
     }

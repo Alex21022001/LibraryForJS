@@ -16,7 +16,7 @@ $(".box").createDropDown({
     id: "test",
     name: "TEST",
     buttonsClasses: ["button", "test"],
-    actions: {
+    actionLink: {
         "Test": "#",
         "Test2": "#",
         "Test3": "#"
