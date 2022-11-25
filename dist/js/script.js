@@ -61,6 +61,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_actions__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./modules/actions */ "./src/js/lib/modules/actions.js");
 /* harmony import */ var _modules_effects__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./modules/effects */ "./src/js/lib/modules/effects.js");
 /* harmony import */ var _modules_dropDown__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/dropDown */ "./src/js/lib/modules/dropDown.js");
+/* harmony import */ var _modules_modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/modal */ "./src/js/lib/modules/modal.js");
+
 
 
 
@@ -84,18 +86,20 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toArray = function (){
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toArray = function () {
     const arr = [];
-    for (let i = 0; i <this.length; i++) {
-        arr[i]=this[i];
+    for (let i = 0; i < this.length; i++) {
+        arr[i] = this[i];
     }
     return arr;
 }
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.html = function (content) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.html = function (content, safe = false) {
     for (let i = 0; i < this.length; i++) {
-        if (content)
+        if (content && safe === false)
             this[i].innerHTML = content;
+        else if (content && safe === true)
+            this[i].innerHTML += content;
         else
             return this[i].innerHTML;
     }
@@ -122,6 +126,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.index = function () {
 }
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.find = function (selector) {
+    let success = false;
     if (!selector) {
         throw new Error("You didn't pass a selector");
     }
@@ -138,6 +143,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.find = function (selecto
 
         for (let j = 0; j < arr.length; j++) {
             this[counter++] = arr[j];
+            success = true;
         }
 
         numberOfItems += arr.length;
@@ -146,6 +152,10 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.find = function (selecto
     this.length = numberOfItems;
     for (; numberOfItems < Object.keys(this).length; numberOfItems++) {
         delete this[numberOfItems];
+    }
+
+    if (success === false) {
+        console.log("Method find. There is no appropriate element for your selector");
     }
 
     return this;
@@ -163,17 +173,17 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.closest = function (sele
         }
     }
     if (success === false)
-        throw new Error("Method closest. There is no appropriate element for your selector");
+        console.log("Method closest. There is no appropriate element for your selector");
 
     this.length = counter;
     for (; counter < Object.keys(this).length; counter++)
         delete this[counter];
 
     let countLength = 0;
-    for (let i = 0; i <this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
         if (this[i] === null) {
             delete this[i];
-        }else
+        } else
             countLength++;
     }
     this.length = countLength;
@@ -196,7 +206,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.siblings = function () {
             this[counter++] = arr[j];
         }
 
-        numberOfItems += arr.length -1;
+        numberOfItems += arr.length - 1;
     }
 
     this.length = numberOfItems;
@@ -270,7 +280,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.show = function (){
         if (!this[i].style){
             continue;
         }
-        this[i].style.display = "";
+        this[i].style.display = "block";
     }
 
     return this;
@@ -313,21 +323,59 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropDown = function (){
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropDown = function () {
     for (let i = 0; i < this.length; i++) {
         const id = this[i].getAttribute("id");
-        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(()=>{
-            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`[data-dropdown-toggle-id="${id}"]`).fadeToggle(300);
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(() => {
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`[data-target="${id}"]`).fadeToggle(300);
         });
     }
-    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".dropdown-item > a").click(function (){
-       setTimeout(()=>{
-           (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).closest("[data-dropdown-toggle-id]").fadeToggle();
-       },100);
+    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".dropdown-item > a").click(function () {
+        setTimeout(() => {
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).closest(".dropdown-menu").fadeToggle();
+        }, 100);
     });
 }
 
-;(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".dropdown-toggle").dropDown();
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = function ({
+                                           id = null,
+                                           name = null,
+                                           buttonsClasses,
+                                           actionLink = null
+                                       }) {
+
+    const dropDown = document.createElement("div"),
+        btn = document.createElement("button");
+
+    dropDown.classList.add("dropdown");
+
+    btn.classList.add(...buttonsClasses);
+    btn.setAttribute("data-toggle","dropdown");
+    btn.setAttribute("id",id)
+    btn.textContent = name;
+
+    dropDown.innerHTML = `
+        <ul class="dropdown-menu" data-target="${id}"></ul>
+    `;
+
+    for (let i = 0; i < this.length; i++) {
+        this[i].insertAdjacentElement("afterend",dropDown);
+        dropDown.insertAdjacentElement("afterbegin",btn);
+    }
+
+    for (const actionName in actionLink) {
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(dropDown).find(".dropdown-menu").html(`
+        <li class="dropdown-item">
+                <a href="${actionLink[actionName]}">${actionName}</a>
+            </li>
+        `,true);
+    }
+
+    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='dropdown']").dropDown();
+}
+
+;(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='dropdown']").dropDown();
 
 /***/ }),
 
@@ -364,7 +412,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.animateOverTime = functi
     return _animateOverTime;
 }
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeIn = function (duration, display, finish) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeIn = function (duration = 300, display, finish) {
     for (let i = 0; i < this.length; i++) {
         this[i].style.display = display || "block";
 
@@ -378,7 +426,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeIn = function (durat
     return this;
 }
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeOut = function (duration, finish) {
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeOut = function (duration = 300, finish) {
     for (let i = 0; i < this.length; i++) {
 
         const _fadeOut = (completion) => {
@@ -487,6 +535,122 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.click = function (handle
     return this;
 }
 
+/***/ }),
+
+/***/ "./src/js/lib/modules/modal.js":
+/*!*************************************!*\
+  !*** ./src/js/lib/modules/modal.js ***!
+  \*************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
+
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.modal = function () {
+    for (let i = 0; i < this.length; i++) {//Проходимся по все елементам
+        const target = this[i].getAttribute("data-target"); // Получаем id модалки которую нужно открыть
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((e) => { // Назначаем клик и показываем модалку
+            e.preventDefault();
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).fadeIn();
+            document.body.style.marginRight = `${calculateScroll()}px`; // Добавляем марджин что бы не двигалосся ползунок
+            document.body.style.overflow = "hidden";
+        });
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).find("[data-close]").click((e) => { // Ищем все дата атрибуты для закрытия и ставим ивент
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(e.target.closest(".modal")).fadeOut();
+            document.body.style.overflow = "";
+            document.body.style.marginRight = `0px`;
+        });
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).closest(".modal").click(function (e) { //Для клика на подложку закрываем
+            if (e.target.classList.contains("modal")) {
+                (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this).fadeOut();
+                document.body.style.overflow = "";
+            }
+        });
+    }
+}
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createModal = function ({text,title,btns}) {
+    for (let i = 0; i <this.length; i++) { //Проходимя по всем елементам которым нужно создать модалку
+        let modal = document.createElement("div");
+        const id = this[i].getAttribute("data-target").replace("#", "");
+        const buttons = [];
+
+        if (!(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`#${id}`).length >= 1) { //Проверяем, если уже создана модалка под тем же id
+            // что бы не было дубликатов и не вызывалось сразу несколько
+
+            //Добавляем класс к основному блоку
+            modal.classList.add("modal");
+            modal.setAttribute("id", id);
+
+            //btns= {count: num, settings : [[title,classes[],close,callback]]}
+
+            for (let j = 0; j < btns.count(); j++) { // Создаем кнопки из переданых настроек, и сохраняем в массив
+                let btn = document.createElement("button");
+                btn.classList.add("button", "modal-btn", ...btns.settings[j][1]);
+                btn.textContent = btns.settings[j][0];
+                if (btns.settings[j][2]) {
+                    btn.setAttribute("data-close", "true");
+                }
+                btn.addEventListener("click", btns.settings[j][3]);
+
+                buttons[j] = btn;
+            }
+
+            //Создаем саму модалку без кнопок
+            modal.innerHTML = ` 
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <button class="modal-close" data-close>
+                        <span>&times;</span>
+                    </button>
+    
+                    <div class="modal-header">
+                        <div class="modal-title">${title}</div>
+                    </div>
+    
+                    <div class="modal-body">${text}</div>
+                    
+                    <div class="modal-footer">
+                        
+                    </div>
+                </div>
+            </div>`;
+
+            modal.querySelector(".modal-footer").append(...buttons);
+
+            //Добавлем модалку в HTML
+            document.body.append(modal);
+
+            //Вызываем метод с тригерами, на кнопку которую мы изначально передали. Что бы все правильно работало
+            // на кнопке долженбыть атрбут с id модалки которую нужно показать при клике.
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).modal();
+        }
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).modal();
+    }
+
+}
+
+function calculateScroll() {
+    const div = document.createElement("div");
+
+    div.style.width = "50px";
+    div.style.height = "50px";
+    div.style.overflowY = "scroll";
+    div.style.visibility = "hidden";
+
+    document.body.append(div);
+    const t = div.offsetWidth - div.clientWidth;
+    div.remove();
+
+    return t;
+}
+
+(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='modal']").modal();
+
 /***/ })
 
 /******/ 	});
@@ -555,17 +719,52 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _lib_lib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lib/lib */ "./src/js/lib/lib.js");
 
 
+//TEST MERGE
+
 
 (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".btn").click(function () {
     (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeOut(800);
-    setTimeout(()=>{
-        (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeInUp(600,50);
-    },1500);
+    setTimeout(() => {
+        (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeInUp(600, 50);
+    }, 1500);
 });
 
 (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".btn2").click(function () {
     (0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").fadeToggle();
 });
+
+(0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])(".box").createDropDown({
+    id: "test",
+    name: "TEST",
+    buttonsClasses: ["button", "test"],
+    actionLink: {
+        "Test": "#",
+        "Test2": "#",
+        "Test3": "#"
+    }
+});
+
+const callback = function () {
+    console.log("Callback");
+}
+
+;(0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='modal-generate']").createModal({
+    text: "It's just a text",
+    title: "Title for modal",
+    //btns= {count: num, settings : [[title,classes[],close,callback]]}
+    btns: {
+        settings: [
+            ["Click Me", ["modal-btn-test", "modal-btn-test-2"], false, callback],
+            ["Second Button", ["modal-btn-test-3"], true]
+        ],
+
+        count() {
+            return this.settings.length
+        }
+    }
+});
+
+
 
 })();
 
