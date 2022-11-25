@@ -5,7 +5,7 @@ $.prototype.show = function (){
         if (!this[i].style){
             continue;
         }
-        this[i].style.display = "";
+        this[i].style.display = "block";
     }
 
     return this;

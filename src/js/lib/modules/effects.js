@@ -23,7 +23,7 @@ $.prototype.animateOverTime = function (duration, callback, finish) {
     return _animateOverTime;
 }
 
-$.prototype.fadeIn = function (duration, display, finish) {
+$.prototype.fadeIn = function (duration = 300, display, finish) {
     for (let i = 0; i < this.length; i++) {
         this[i].style.display = display || "block";
 
@@ -37,7 +37,7 @@ $.prototype.fadeIn = function (duration, display, finish) {
     return this;
 }
 
-$.prototype.fadeOut = function (duration, finish) {
+$.prototype.fadeOut = function (duration = 300, finish) {
     for (let i = 0; i < this.length; i++) {
 
         const _fadeOut = (completion) => {

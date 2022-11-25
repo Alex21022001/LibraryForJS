@@ -1,17 +1,19 @@
 import $ from "../core";
 
-$.prototype.toArray = function (){
+$.prototype.toArray = function () {
     const arr = [];
-    for (let i = 0; i <this.length; i++) {
-        arr[i]=this[i];
+    for (let i = 0; i < this.length; i++) {
+        arr[i] = this[i];
     }
     return arr;
 }
 
-$.prototype.html = function (content) {
+$.prototype.html = function (content, safe = false) {
     for (let i = 0; i < this.length; i++) {
-        if (content)
+        if (content && safe === false)
             this[i].innerHTML = content;
+        else if (content && safe === true)
+            this[i].innerHTML += content;
         else
             return this[i].innerHTML;
     }
@@ -38,6 +40,7 @@ $.prototype.index = function () {
 }
 
 $.prototype.find = function (selector) {
+    let success = false;
     if (!selector) {
         throw new Error("You didn't pass a selector");
     }
@@ -54,6 +57,7 @@ $.prototype.find = function (selector) {
 
         for (let j = 0; j < arr.length; j++) {
             this[counter++] = arr[j];
+            success = true;
         }
 
         numberOfItems += arr.length;
@@ -62,6 +66,10 @@ $.prototype.find = function (selector) {
     this.length = numberOfItems;
     for (; numberOfItems < Object.keys(this).length; numberOfItems++) {
         delete this[numberOfItems];
+    }
+
+    if (success === false) {
+        console.log("Method find. There is no appropriate element for your selector");
     }
 
     return this;
@@ -79,17 +87,17 @@ $.prototype.closest = function (selector) {
         }
     }
     if (success === false)
-        throw new Error("Method closest. There is no appropriate element for your selector");
+        console.log("Method closest. There is no appropriate element for your selector");
 
     this.length = counter;
     for (; counter < Object.keys(this).length; counter++)
         delete this[counter];
 
     let countLength = 0;
-    for (let i = 0; i <this.length; i++) {
+    for (let i = 0; i < this.length; i++) {
         if (this[i] === null) {
             delete this[i];
-        }else
+        } else
             countLength++;
     }
     this.length = countLength;
@@ -112,7 +120,7 @@ $.prototype.siblings = function () {
             this[counter++] = arr[j];
         }
 
-        numberOfItems += arr.length -1;
+        numberOfItems += arr.length - 1;
     }
 
     this.length = numberOfItems;

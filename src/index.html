@@ -9,38 +9,142 @@
 </head>
 <body>
 
-<div class="test">1</div>
-<div class="test" id="test">2</div>
-<div class="test3">
-    <div class="more">more</div>
-    <div class="some">some</div>
+<div class="container">
+    <div class="test">1</div>
+    <div class="test" id="test">2</div>
     <div class="test3">
-        <div class="more">more2</div>
-        <div class="some">some2</div>
-        <div class="some3">some3</div>
+        <div class="more">more</div>
+        <div class="some">some</div>
+        <div class="test3">
+            <div class="more">more2</div>
+            <div class="some">some2</div>
+            <div class="some3">some3</div>
+        </div>
+    </div>
+    <button class="btn button">CLICK ME</button>
+    <button class="btn2 button">CLICK ME</button>
+    <div class="box w-200 h-200 "></div>
+
+    <!--//DROPDOWN-->
+    <div class="dropdown">
+        <button class="button" data-toggle="dropdown" id="dropDownMenuButton">DropDown menu</button>
+        <ul class="dropdown-menu" data-target="dropDownMenuButton">
+            <li class="dropdown-item">
+                <a href="#">ACTION #1</a>
+            </li>
+            <li class="dropdown-item">
+                <a href="#">ACTION #2</a>
+            </li>
+            <li class="dropdown-item">
+                <a href="#">ACTION #3</a>
+            </li>
+        </ul>
+    </div>
+
+    <!--CARD-->
+    <div class="goods">
+
+        <div class="card">
+            <img class="card-img"
+                 src="img.png"
+                 alt="">
+            <div class="card-body">
+                <div class="card-title">Card Title</div>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab adipisci facere
+                    laborum nemo
+                    quis suscipit veniam veritatis voluptatum? Aspernatur deleniti deserunt dolor et exercitationem illo
+                    libero
+                    nemo placeat quas quasi.</p>
+                <a href="#" class="button card-btn" data-toggle="modal" data-target="#exampleModal">Learn more...</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDkvFCLSMbUU6Bqb1m-0y3LPAQ7_Gcs-PNZw&usqp=CAU"
+                 alt="">
+            <div class="card-body">
+                <div class="card-title">Card Title</div>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab adipisci facere
+                    laborum nemo
+                    quis suscipit veniam veritatis voluptatum? Aspernatur deleniti deserunt dolor et exercitationem illo
+                    libero
+                    nemo placeat quas quasi.</p>
+                <a href="#" class="button card-btn" data-toggle="modal-generate" data-target="#testModal">Learn more...</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDkvFCLSMbUU6Bqb1m-0y3LPAQ7_Gcs-PNZw&usqp=CAU"
+                 alt="">
+            <div class="card-body">
+                <div class="card-title">Card Title</div>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab adipisci facere
+                    laborum nemo
+                    quis suscipit veniam veritatis voluptatum? Aspernatur deleniti deserunt dolor et exercitationem illo
+                    libero
+                    nemo placeat quas quasi.</p>
+                <a href="#" data-toggle="modal-generate" data-target="#testModal" class="button card-btn">Learn more...</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDkvFCLSMbUU6Bqb1m-0y3LPAQ7_Gcs-PNZw&usqp=CAU"
+                 alt="">
+            <div class="card-body">
+                <div class="card-title">Card Title</div>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab adipisci facere
+                    laborum nemo
+                    quis suscipit veniam veritatis voluptatum? Aspernatur deleniti deserunt dolor et exercitationem illo
+                    libero
+                    nemo placeat quas quasi.</p>
+                <a href="#" data-toggle="modal-generate" data-target="#testModal" class="button card-btn">Learn more...</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <img class="card-img"
+                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTDkvFCLSMbUU6Bqb1m-0y3LPAQ7_Gcs-PNZw&usqp=CAU"
+                 alt="">
+            <div class="card-body">
+                <div class="card-title">Card Title</div>
+                <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab adipisci facere
+                    laborum nemo
+                    quis suscipit veniam veritatis voluptatum? Aspernatur deleniti deserunt dolor et exercitationem illo
+                    libero
+                    nemo placeat quas quasi.</p>
+                <a href="#" class="button card-btn">Learn more...</a>
+            </div>
+        </div>
+    </div>
+
+
+    <!--    MODAL-->
+    <div class="modal" id="exampleModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <button class="modal-close" data-close>
+                    <span>&times;</span>
+                </button>
+
+                <div class="modal-header">
+                    <div class="modal-title">Modal Title</div>
+                </div>
+
+                <div class="modal-body">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci aut autem
+                    consectetur dolore dolores ea earum eum ipsa laborum nihil numquam obcaecati perferendis,
+                    perspiciatis qui quis rem unde ut veniam!
+                </div>
+
+                <div class="modal-footer">
+                    <button class="button modal-btn" data-close>Send</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<button class="btn button">CLICK ME</button>
-<button class="btn2 button">CLICK ME</button>
-<div class="box w-200 h-200 "></div>
-
-<!--//DROPDOWN-->
-<div class="dropdown">
-    <button class="button dropdown-toggle" id="dropDownMenuButton">DropDown menu</button>
-    <ul class="dropdown-menu" data-dropdown-toggle-id="dropDownMenuButton">
-        <li class="dropdown-item">
-            <a href="#">ACTION #1</a>
-        </li>
-        <li class="dropdown-item">
-            <a href="#">ACTION #2</a>
-        </li>
-        <li class="dropdown-item">
-            <a href="#">ACTION #3</a>
-        </li>
-    </ul>
-</div>
-
-<!--CARD-->
 
 <script src="../dist/js/script.js"></script>
 <!--    <script src='js/main.js'></script>-->
