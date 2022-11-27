@@ -325,9 +325,11 @@ __webpack_require__.r(__webpack_exports__);
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.dropDown = function () {
     for (let i = 0; i < this.length; i++) {
-        const id = this[i].getAttribute("id");
-        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(() => {
-            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(`[data-target="${id}"]`).fadeToggle(300);
+        const id = this[i].getAttribute("data-target");
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((event) => {
+            event.stopPropagation();
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("#"+id).fadeToggle(300);
+
         });
     }
     (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(".dropdown-item > a").click(function () {
@@ -350,12 +352,12 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = functio
     dropDown.classList.add("dropdown");
 
     btn.classList.add(...buttonsClasses);
-    btn.setAttribute("data-toggle","dropdown");
-    btn.setAttribute("id",id)
+    btn.setAttribute("data-toggle","generate-dropdown");
+    btn.setAttribute("data-target",id);
     btn.textContent = name;
 
     dropDown.innerHTML = `
-        <ul class="dropdown-menu" data-target="${id}"></ul>
+        <ul class="dropdown-menu" id="${id}"></ul>
     `;
 
     for (let i = 0; i < this.length; i++) {
@@ -364,7 +366,6 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = functio
     }
 
     for (const actionName in actionLink) {
-
         (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(dropDown).find(".dropdown-menu").html(`
         <li class="dropdown-item">
                 <a href="${actionLink[actionName]}">${actionName}</a>
@@ -372,7 +373,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = functio
         `,true);
     }
 
-    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='dropdown']").dropDown();
+    (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='generate-dropdown']").dropDown();
 }
 
 ;(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='dropdown']").dropDown();

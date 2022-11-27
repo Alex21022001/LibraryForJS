@@ -2,9 +2,11 @@ import $ from "../core";
 
 $.prototype.dropDown = function () {
     for (let i = 0; i < this.length; i++) {
-        const id = this[i].getAttribute("id");
-        $(this[i]).click(() => {
-            $(`[data-target="${id}"]`).fadeToggle(300);
+        const id = this[i].getAttribute("data-target");
+        $(this[i]).click((event) => {
+            event.stopPropagation();
+            $("#"+id).fadeToggle(300);
+
         });
     }
     $(".dropdown-item > a").click(function () {
@@ -27,12 +29,12 @@ $.prototype.createDropDown = function ({
     dropDown.classList.add("dropdown");
 
     btn.classList.add(...buttonsClasses);
-    btn.setAttribute("data-toggle","dropdown");
-    btn.setAttribute("id",id)
+    btn.setAttribute("data-toggle","generate-dropdown");
+    btn.setAttribute("data-target",id);
     btn.textContent = name;
 
     dropDown.innerHTML = `
-        <ul class="dropdown-menu" data-target="${id}"></ul>
+        <ul class="dropdown-menu" id="${id}"></ul>
     `;
 
     for (let i = 0; i < this.length; i++) {
@@ -41,7 +43,6 @@ $.prototype.createDropDown = function ({
     }
 
     for (const actionName in actionLink) {
-
         $(dropDown).find(".dropdown-menu").html(`
         <li class="dropdown-item">
                 <a href="${actionLink[actionName]}">${actionName}</a>
@@ -49,7 +50,7 @@ $.prototype.createDropDown = function ({
         `,true);
     }
 
-    $("[data-toggle='dropdown']").dropDown();
+    $("[data-toggle='generate-dropdown']").dropDown();
 }
 
 $("[data-toggle='dropdown']").dropDown();
