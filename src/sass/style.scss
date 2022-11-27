@@ -6,3 +6,9 @@
 .box{
     background-color: #ffc907;
 }
+
+@media (max-width: 1200px) {
+    .container{
+        width: 80vw;
+    }
+}
