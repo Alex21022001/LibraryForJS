@@ -670,18 +670,9 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.tab = function () {
     for (let i = 0; i < this.length; i++) {
         (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((event) => {
             event.preventDefault();
-            clearTab(i);
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).addClass("tab-item_active")
+                .siblings().removeClass("tab-item_active");
         });
-    }
-
-    const clearTab = (index) => {
-        for (let i = 0; i < this.length; i++) {
-            this[i].classList.remove("tab-item_active");
-            setActiveClass(this[index]);
-        }
-    }
-    const setActiveClass = (item) => {
-        item.classList.add("tab-item_active");
     }
 };
 

@@ -4,18 +4,9 @@ $.prototype.tab = function () {
     for (let i = 0; i < this.length; i++) {
         $(this[i]).click((event) => {
             event.preventDefault();
-            clearTab(i);
+            $(this[i]).addClass("tab-item_active")
+                .siblings().removeClass("tab-item_active");
         });
-    }
-
-    const clearTab = (index) => {
-        for (let i = 0; i < this.length; i++) {
-            this[i].classList.remove("tab-item_active");
-            setActiveClass(this[index]);
-        }
-    }
-    const setActiveClass = (item) => {
-        item.classList.add("tab-item_active");
     }
 };
 
