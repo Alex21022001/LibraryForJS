@@ -109,7 +109,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.html = function (content
 }
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.eq = function (index) {
-    if (index)
+    if (index || index >=0)
         return (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[index]);
     else
         return this;
@@ -671,7 +671,9 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.tab = function () {
         (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click((event) => {
             event.preventDefault();
             (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).addClass("tab-item_active")
-                .siblings().removeClass("tab-item_active");
+                .siblings().removeClass("tab-item_active")
+                .closest(".tab").find(".tab-content").removeClass("tab-content_active")
+                .eq((0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).index()).addClass("tab-content_active");
         });
     }
 };

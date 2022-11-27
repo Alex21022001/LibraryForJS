@@ -5,7 +5,9 @@ $.prototype.tab = function () {
         $(this[i]).click((event) => {
             event.preventDefault();
             $(this[i]).addClass("tab-item_active")
-                .siblings().removeClass("tab-item_active");
+                .siblings().removeClass("tab-item_active")
+                .closest(".tab").find(".tab-content").removeClass("tab-content_active")
+                .eq($(this[i]).index()).addClass("tab-content_active");
         });
     }
 };

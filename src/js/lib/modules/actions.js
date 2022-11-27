@@ -21,7 +21,7 @@ $.prototype.html = function (content, safe = false) {
 }
 
 $.prototype.eq = function (index) {
-    if (index)
+    if (index || index >=0)
         return $(this[index]);
     else
         return this;
