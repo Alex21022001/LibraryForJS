@@ -8,6 +8,8 @@ import "./modules/dropDown"
 import "./modules/modal"
 import "./modules/tab"
 import "./modules/accordion"
+import "./modules/carousel"
+import "./services/request"
 
 
 export default $;

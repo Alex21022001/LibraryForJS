@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/js/lib/core.js":
@@ -8,6 +7,7 @@
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -50,6 +50,7 @@ window.$ = $;
   \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -64,6 +65,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/modal */ "./src/js/lib/modules/modal.js");
 /* harmony import */ var _modules_tab__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/tab */ "./src/js/lib/modules/tab.js");
 /* harmony import */ var _modules_accordion__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/accordion */ "./src/js/lib/modules/accordion.js");
+/* harmony import */ var _modules_carousel__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./modules/carousel */ "./src/js/lib/modules/carousel.js");
+/* harmony import */ var _services_request__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./services/request */ "./src/js/lib/services/request.js");
+/* harmony import */ var _services_request__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(_services_request__WEBPACK_IMPORTED_MODULE_11__);
+
+
 
 
 
@@ -86,6 +92,7 @@ __webpack_require__.r(__webpack_exports__);
   \*****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -99,7 +106,6 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.accordion = function (co
             (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).siblings().toggleClass(contentActiveClass);
 
             if (content.classList.contains(contentActiveClass)) {
-                console.log(1);
                 content.style.maxHeight = content.scrollHeight + padding + "px";
             } else
                 content.style.maxHeight = "0px";
@@ -115,17 +121,12 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.accordion = function (co
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
 
-_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toArray = function () {
-    const arr = [];
-    for (let i = 0; i < this.length; i++) {
-        arr[i] = this[i];
-    }
-    return arr;
-}
+
 
 _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.html = function (content, safe = false) {
     for (let i = 0; i < this.length; i++) {
@@ -252,12 +253,97 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.siblings = function () {
 
 /***/ }),
 
+/***/ "./src/js/lib/modules/carousel.js":
+/*!****************************************!*\
+  !*** ./src/js/lib/modules/carousel.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
+
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.carousel = function (contentClass = null) {
+    for (let i = 0; i < this.length; i++) {
+        const slideWrapper = this[i].querySelector(contentClass),
+            content = slideWrapper.querySelector(".carousel-slides"),
+            slides = slideWrapper.querySelectorAll(".carousel-item"),
+            indicators = this[i].querySelectorAll(".carousel-indicators li"),
+            sliderAmount = slides.length,
+            contentWidth = slideWrapper.scrollWidth;
+
+        let offset = 0;
+        let currentSLide = 0;
+
+        content.style.width = 100 * sliderAmount + "%";
+
+        slides.forEach(item => {
+            item.style.width = contentWidth + "px";
+        });
+
+        if (this[i].getAttribute("data-slide-auto")){
+            console.log(1);
+            setInterval(()=>{
+                slideWrapper.querySelector(".carousel-next").click();
+            },5000);
+        }
+
+        function moveSlide(){
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(indicators[currentSLide]).addClass("active").siblings().removeClass("active");
+            content.style.transform = `translateX(-${offset}px)`;
+        }
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i].querySelector(".carousel-next")).click((e) => {
+            e.preventDefault();
+            if (offset >= contentWidth * (sliderAmount - 1)) {
+                offset = 0;
+                currentSLide = 0;
+            } else {
+                offset += contentWidth;
+                currentSLide++;
+            }
+
+            moveSlide();
+        });
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i].querySelector(".carousel-prev")).click((e) => {
+            e.preventDefault();
+            if (offset === 0) {
+                offset = contentWidth * (sliderAmount - 1);
+                currentSLide = sliderAmount - 1;
+            } else {
+                offset -= contentWidth;
+                currentSLide--;
+            }
+
+            moveSlide();
+        });
+
+        indicators.forEach(item => {
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(item).click((e) => {
+                const target = e.target;
+                currentSLide = (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(target).index();
+                offset = contentWidth * currentSLide;
+
+                moveSlide();
+            });
+        });
+
+    }
+}
+
+;(0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='slider']").carousel(".carousel-inner")
+
+/***/ }),
+
 /***/ "./src/js/lib/modules/classes.js":
 /*!***************************************!*\
   !*** ./src/js/lib/modules/classes.js ***!
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -304,6 +390,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toggleClass = function (
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -352,6 +439,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.toggleDisplay = function
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -419,6 +507,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.createDropDown = functio
   \***************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -531,6 +620,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.fadeToggle = function (d
   \****************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -577,6 +667,7 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.click = function (handle
   \*************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -693,6 +784,7 @@ function calculateScroll() {
   \***********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
 
@@ -710,6 +802,16 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.tab = function () {
 };
 
 (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-tabpanel] .tab-item").tab();
+
+/***/ }),
+
+/***/ "./src/js/lib/services/request.js":
+/*!****************************************!*\
+  !*** ./src/js/lib/services/request.js ***!
+  \****************************************/
+/***/ (() => {
+
+
 
 /***/ })
 
@@ -740,6 +842,18 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.tab = function () {
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__webpack_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__webpack_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -770,8 +884,9 @@ _core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.tab = function () {
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!************************!*\
   !*** ./src/js/main.js ***!
   \************************/

@@ -1,12 +1,6 @@
 import $ from "../core";
 
-$.prototype.toArray = function () {
-    const arr = [];
-    for (let i = 0; i < this.length; i++) {
-        arr[i] = this[i];
-    }
-    return arr;
-}
+
 
 $.prototype.html = function (content, safe = false) {
     for (let i = 0; i < this.length; i++) {
