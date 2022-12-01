@@ -3,13 +3,13 @@
 let path = require('path');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     entry: __dirname + "/src/js/main.js",
     output: {
-        filename: 'script.js',
+        filename: 'myOwnLibrary.js',
         path: __dirname + '/dist/js/'
     },
-    watch: true,
+    watch: false,
 
     devtool: "source-map",
 
