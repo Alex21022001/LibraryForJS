@@ -44,5 +44,8 @@ $("[data-toggle='modal-generate']").createModal({
         }
     }
 });
+console.log($("[data-toggle='accordion']"));
+
+$("[data-toggle='accordion']").accordion();
 
 

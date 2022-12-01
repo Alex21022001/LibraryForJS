@@ -222,6 +222,24 @@
   color: #343a40;
   cursor: pointer;
 }
+.accordion-inner {
+  display: block;
+  padding: 20px;
+}
+.accordion-content {
+  max-height: 0px;
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 0.5s, max-height 0.4s, padding 0.1s;
+  background-color: #ffffff;
+  border: 1px solid rgb(224, 211, 211);
+  border-top: none;
+  border-radius: 0 0 4px 4px;
+}
+.accordion-content_active {
+  overflow: visible;
+  opacity: 1;
+}
 
 .hidden {
   visibility: hidden;
@@ -398,6 +416,10 @@
 
 .box {
   background-color: #ffc907;
+}
+
+.block {
+  height: 500px;
 }
 
 @media (max-width: 1200px) {

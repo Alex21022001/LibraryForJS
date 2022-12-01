@@ -63,6 +63,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_dropDown__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./modules/dropDown */ "./src/js/lib/modules/dropDown.js");
 /* harmony import */ var _modules_modal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./modules/modal */ "./src/js/lib/modules/modal.js");
 /* harmony import */ var _modules_tab__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./modules/tab */ "./src/js/lib/modules/tab.js");
+/* harmony import */ var _modules_accordion__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./modules/accordion */ "./src/js/lib/modules/accordion.js");
+
 
 
 
@@ -75,6 +77,35 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_core__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+/***/ }),
+
+/***/ "./src/js/lib/modules/accordion.js":
+/*!*****************************************!*\
+  !*** ./src/js/lib/modules/accordion.js ***!
+  \*****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../core */ "./src/js/lib/core.js");
+
+
+_core__WEBPACK_IMPORTED_MODULE_0__["default"].prototype.accordion = function (contentActiveClass = "accordion-content_active", padding = 20) {
+    for (let i = 0; i < this.length; i++) {
+
+        const content = (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).siblings()[0];
+
+        (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).click(() => {
+            (0,_core__WEBPACK_IMPORTED_MODULE_0__["default"])(this[i]).siblings().toggleClass(contentActiveClass);
+
+            if (content.classList.contains(contentActiveClass)) {
+                console.log(1);
+                content.style.maxHeight = content.scrollHeight + padding + "px";
+            } else
+                content.style.maxHeight = "0px";
+        });
+    }
+}
 
 /***/ }),
 
@@ -792,6 +823,9 @@ const callback = function () {
         }
     }
 });
+console.log((0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='accordion']"));
+
+(0,_lib_lib__WEBPACK_IMPORTED_MODULE_0__["default"])("[data-toggle='accordion']").accordion();
 
 
 
